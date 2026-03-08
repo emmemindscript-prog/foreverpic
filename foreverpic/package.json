@@ -1,0 +1,60 @@
+{
+  "name": "foreverpic",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "db:push": "supabase db push",
+    "db:studio": "supabase studio",
+    "db:seed": "ts-node prisma/seed.ts"
+  },
+  "dependencies": {
+    "next": "^14.2.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/auth-ui-react": "^0.4.7",
+    "@supabase/auth-ui-shared": "^0.1.8",
+    "@supabase/storage-js": "^2.5.5",
+    "@prisma/client": "^5.18.0",
+    "prisma": "^5.18.0",
+    "tailwindcss": "^3.4.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.5.0",
+    "lucide-react": "^0.400.0",
+    "date-fns": "^3.6.0",
+    "react-camera-qr-scanner": "^1.0.13",
+    "react-qr-reader": "^3.0.0",
+    "qrcode.react": "^3.1.0",
+    "face-api.js": "^0.22.2",
+    "@tensorflow/tfjs": "^4.20.0",
+    "sharp": "^0.33.4",
+    "busboy": "^1.6.0",
+    "zod": "^3.23.8",
+    "react-hook-form": "^7.52.0",
+    "@hookform/resolvers": "^3.6.0",
+    "framer-motion": "^11.3.0",
+    "react-use": "^17.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "@types/busboy": "^1.5.4",
+    "typescript": "^5.5.0",
+    "ts-node": "^10.9.2",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.0",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.39"
+  },
+  "engines": {
+    "node": ">=18.17.0",
+    "npm": ">=9.0.0"
+  }
+}
