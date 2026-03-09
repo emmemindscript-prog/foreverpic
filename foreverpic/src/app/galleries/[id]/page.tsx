@@ -119,18 +119,22 @@ export default function GalleryViewPage() {
         ) : viewMode==='grid' ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {photos.map(p=>(
-              <Card key={p.id} className="overflow-hidden cursor-pointer hover:shadow-lg" onClick={()=>setSelectedPhoto(p)}>
-                <div className="aspect-square bg-gray-100"><img src={p.thumbnailUrl} alt={p.filename} className="w-full h-full object-cover" loading="lazy"/></div>
-              </Card>
+              <div key={p.id} onClick={()=>setSelectedPhoto(p)} className="cursor-pointer">
+                <Card className="overflow-hidden hover:shadow-lg">
+                  <div className="aspect-square bg-gray-100"><img src={p.thumbnailUrl} alt={p.filename} className="w-full h-full object-cover" loading="lazy"/></div>
+                </Card>
+              </div>
             ))}
           </div>
         ) : (
           <div className="space-y-2">
             {photos.map(p=>(
-              <Card key={p.id} className="p-4 flex items-center gap-4 cursor-pointer hover:shadow-lg" onClick={()=>setSelectedPhoto(p)}>
-                <div className="w-16 h-16 bg-gray-100 rounded overflow-hidden"><img src={p.thumbnailUrl} alt={p.filename} className="w-full h-full object-cover"/></div>
-                <div className="flex-1"><p className="font-medium truncate">{p.filename}</p><p className="text-sm text-gray-600">{(p.fileSize/1024/1024).toFixed(2)} MB</p></div>
-              </Card>
+              <div key={p.id} onClick={()=>setSelectedPhoto(p)} className="cursor-pointer">
+                <Card className="p-4 flex items-center gap-4 hover:shadow-lg">
+                  <div className="w-16 h-16 bg-gray-100 rounded overflow-hidden"><img src={p.thumbnailUrl} alt={p.filename} className="w-full h-full object-cover"/></div>
+                  <div className="flex-1"><p className="font-medium truncate">{p.filename}</p><p className="text-sm text-gray-600">{(p.fileSize/1024/1024).toFixed(2)} MB</p></div>
+                </Card>
+              </div>
             ))}
           </div>
         )}

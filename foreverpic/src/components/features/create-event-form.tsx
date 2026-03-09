@@ -102,7 +102,7 @@ export default function CreateEventForm() {
           onChange={(e) =>
             setFormData({ ...formData, password: e.target.value })
           }
-          helperText="Lascia vuoto per accesso pubblico"
+          
         />
 
         {error && (

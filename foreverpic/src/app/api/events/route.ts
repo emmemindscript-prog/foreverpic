@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { adminSupabase } from '@/lib/supabase/admin'
-import { generateEventQRCodeId } from '@/lib/qrcode'
-import { generateQRCode } from '@/lib/qrcode'
+export const dynamic = 'force-dynamic'
+
+import { generateEventQRCodeId, buildScanUrl, generateQRCode } from '@/lib/qrcode'
 
 export async function POST(request: NextRequest) {
   try {

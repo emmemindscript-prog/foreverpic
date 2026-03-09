@@ -21,16 +21,9 @@ export async function generateQRCode(
         light: '#FFFFFF',
       },
     })
-
-    return {
-      success: true,
-      qrCode,
-    }
+    return { success: true, qrCode }
   } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Failed to generate QR code',
-    }
+    return { success: false, error: error instanceof Error ? error.message : 'Failed to generate QR code' }
   }
 }
 
@@ -46,13 +39,6 @@ export function generateEventQRCodeId(): string {
  */
 export function generateGalleryQRCodeId(): string {
   return `gal-${Date.now()}-${Math.random().toString(36).substring(7)}`
-}
-
-/**
- * Build scan URL for QR code
- */
-export function buildScanUrl(qrCodeId: string, baseUrl: string): string {
-  return `${baseUrl}/scan/${qrCodeId}`
 }
 
 /**
