@@ -8,28 +8,29 @@ datasource db {
 }
 
 model Event {
-  id           String   @id @default(uuid())
-  title        String
-  date         DateTime
-  hostEmail    String
-  hostName     String?
-  qrCode       String   @unique
-  password     String?
-  theme        Json?
-  settings     Json?
-  galleries    Gallery[]
-  guests       Guest[]
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id        String   @id @default(uuid())
+  title     String
+  date      DateTime
+  hostEmail String
+  hostName  String?
+  qrCode    String   @unique
+  password  String?
+  theme     Json?
+  settings  Json?
+  galleries Gallery[]
+  guests    Guest[]
+  rsvpCards RSVPCard[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Gallery {
-  id          String   @id @default(uuid())
+  id          String  @id @default(uuid())
   eventId     String
-  event       Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event       Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
   title       String
   description String?
-  qrCode      String   @unique
+  qrCode      String  @unique
   photos      Photo[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -38,45 +39,47 @@ model Gallery {
 }
 
 model Photo {
-  id                 String   @id @default(uuid())
-  galleryId          String
-  gallery            Gallery  @relation(fields: [galleryId], references: [id], onDelete: Cascade)
-  uploadedByEmail    String?
-  uploadedByGuest   Guest?
-  imageUrl           String
-  thumbnailUrl       String?
-  description        String?
-  tags               Json?
-  reactions          Json?
-  metadata           Json?
-  moderationStatus   String   @default("pending")
-  createdAt          DateTime @default(now())
+  id                String              @id @default(uuid())
+  galleryId         String
+  gallery           Gallery             @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  uploadedByEmail   String?
+  uploadedByGuest   Guest?              @relation(fields: [uploadedByGuestId], references: [id])
+  uploadedByGuestId String?
+  imageUrl          String
+  thumbnailUrl      String?
+  description       String?
+  tags              Json?
+  reactions         Json?
+  metadata          Json?
+  moderationStatus  String              @default("pending")
+  createdAt         DateTime            @default(now())
 
   @@index([galleryId])
 }
 
 model UploadedByGuestUser {
-  id        String   @id @default(uuid())
-  name      String?
-  email     String?
-  photos    Photo[]
-  guests    Guest[]
+  id     String  @id @default(uuid())
+  name   String?
+  email  String?
+  photos Photo[]
+  guests Guest[]
 
   @@index([email])
 }
 
 model Guest {
-  id                        String   @id @default(uuid())
-  event                     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId                   String
-  name                      String?
-  email                     String?
-  phone                     String?
-  uploadedByGuestUserId     String?
-  uploadedByGuestUser       UploadedByGuestUser? @relation(fields: [uploadedByGuestUserId], references: [id])
-  rsvpStatus                String   @default("pending")
-  guestbookMessages         GuestbookMessage[]
-  photos                    Photo[]
+  id                    String              @id @default(uuid())
+  event                 Event               @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId               String
+  name                  String?
+  email                 String?
+  phone                 String?
+  uploadedByGuestUserId String?
+  uploadedByGuestUser   UploadedByGuestUser? @relation(fields: [uploadedByGuestUserId], references: [id])
+  rsvpStatus            String              @default("pending")
+  guestbookMessages     GuestbookMessage[]
+  photos                Photo[]
+  rsvp                  RSVPCard?
 
   @@index([eventId])
   @@index([email])
@@ -92,4 +95,50 @@ model GuestbookMessage {
   createdAt DateTime @default(now())
 
   @@index([guestId])
+}
+
+model RSVPCard {
+  id String @id @default(uuid())
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId String
+  guest Guest @relation(fields: [guestId], references: [id], onDelete: Cascade)
+  guestId String @unique
+
+  // RSVP Details
+  status RSVPStatus @default(PENDING)
+  attending Boolean?
+  plusOnes Int @default(0)
+  dietaryRequirements String?
+  notes String?
+
+  // Contact & Shipping
+  phone String?
+  address String?
+
+  // Metadata
+  respondedAt DateTime?
+  lastReminderSentAt DateTime?
+  reminderCount Int @default(0)
+
+  // Email tracking
+  emailSent Boolean @default(false)
+  emailOpenedAt DateTime?
+  magicLinkToken String? @unique
+  magicLinkExpiresAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([eventId])
+  @@index([guestId])
+  @@index([status])
+  @@index([magicLinkToken])
+}
+
+enum RSVPStatus {
+  PENDING
+  ATTENDING
+  NOT_ATTENDING
+  MAYBE
+  NO_RESPONSE
 }
