@@ -17,50 +17,58 @@ model Event {
   password  String?
   theme     Json?
   settings  Json?
+
   galleries Gallery[]
   guests    Guest[]
   rsvpCards RSVPCard[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Gallery {
-  id          String  @id @default(uuid())
+  id          String @id @default(uuid())
   eventId     String
-  event       Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event       Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
   title       String
   description String?
-  qrCode      String  @unique
-  photos      Photo[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  qrCode      String @unique
+
+  photos Photo[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([eventId])
 }
 
 model Photo {
-  id                String              @id @default(uuid())
-  galleryId         String
-  gallery           Gallery             @relation(fields: [galleryId], references: [id], onDelete: Cascade)
-  uploadedByEmail   String?
-  uploadedByGuest   Guest?              @relation(fields: [uploadedByGuestId], references: [id])
-  uploadedByGuestId String?
-  imageUrl          String
-  thumbnailUrl      String?
-  description       String?
-  tags              Json?
-  reactions         Json?
-  metadata          Json?
-  moderationStatus  String              @default("pending")
-  createdAt         DateTime            @default(now())
+  id                   String  @id @default(uuid())
+  galleryId            String
+  gallery              Gallery @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  uploadedByEmail      String?
+  uploadedByGuest      Guest?  @relation(fields: [uploadedByGuestId], references: [id])
+  uploadedByGuestId    String?
+  uploadedByGuestUser  UploadedByGuestUser? @relation(fields: [uploadedByGuestUserId], references: [id])
+  uploadedByGuestUserId String?
+  imageUrl             String
+  thumbnailUrl         String?
+  description          String?
+  tags                 Json?
+  reactions            Json?
+  metadata             Json?
+  moderationStatus     String  @default("pending")
+
+  createdAt DateTime @default(now())
 
   @@index([galleryId])
 }
 
 model UploadedByGuestUser {
-  id     String  @id @default(uuid())
-  name   String?
-  email  String?
+  id    String  @id @default(uuid())
+  name  String?
+  email String?
+
   photos Photo[]
   guests Guest[]
 
@@ -76,54 +84,58 @@ model Guest {
   phone                 String?
   uploadedByGuestUserId String?
   uploadedByGuestUser   UploadedByGuestUser? @relation(fields: [uploadedByGuestUserId], references: [id])
-  rsvpStatus            String              @default("pending")
-  guestbookMessages     GuestbookMessage[]
-  photos                Photo[]
-  rsvp                  RSVPCard?
+
+  rsvpStatus      String              @default("pending")
+  guestbookMessages GuestbookMessage[]
+  photos          Photo[]
+  rsvp            RSVPCard?
 
   @@index([eventId])
   @@index([email])
 }
 
 model GuestbookMessage {
-  id        String   @id @default(uuid())
-  guestId   String
-  guest     Guest    @relation(fields: [guestId], references: [id], onDelete: Cascade)
-  type      String   // text, audio, video
-  content   String
-  url       String?
+  id      String @id @default(uuid())
+  guestId String
+  guest   Guest  @relation(fields: [guestId], references: [id], onDelete: Cascade)
+
+  type    String // text, audio, video
+  content String
+  url     String?
+
   createdAt DateTime @default(now())
 
   @@index([guestId])
 }
 
 model RSVPCard {
-  id String @id @default(uuid())
-  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  id      String @id @default(uuid())
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId String
-  guest Guest @relation(fields: [guestId], references: [id], onDelete: Cascade)
+  guest   Guest  @relation(fields: [guestId], references: [id], onDelete: Cascade)
   guestId String @unique
 
   // RSVP Details
-  status RSVPStatus @default(PENDING)
-  attending Boolean?
-  plusOnes Int @default(0)
+  status              RSVPStatus @default(PENDING)
+  attending           Boolean?
+  plusOnes            Int        @default(0)
   dietaryRequirements String?
-  notes String?
+  notes               String?
 
   // Contact & Shipping
-  phone String?
+  phone   String?
   address String?
 
   // Metadata
-  respondedAt DateTime?
+  respondedAt        DateTime?
   lastReminderSentAt DateTime?
-  reminderCount Int @default(0)
+  reminderCount      Int       @default(0)
 
   // Email tracking
-  emailSent Boolean @default(false)
+  emailSent     Boolean   @default(false)
   emailOpenedAt DateTime?
-  magicLinkToken String? @unique
+
+  magicLinkToken  String?   @unique
   magicLinkExpiresAt DateTime?
 
   createdAt DateTime @default(now())

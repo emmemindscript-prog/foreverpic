@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, RSVPStatus } from '@prisma/client'
 import { randomUUID } from 'crypto'
 
 export const dynamic = 'force-dynamic'
@@ -139,9 +139,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Calculate status
-    let status = 'PENDING'
-    if (attending === true) status = 'ATTENDING'
-    if (attending === false) status = 'NOT_ATTENDING'
+    let status: RSVPStatus = RSVPStatus.PENDING
+    if (attending === true) status = RSVPStatus.ATTENDING
+    if (attending === false) status = RSVPStatus.NOT_ATTENDING
 
     // Create or update RSVP
     const rsvp = await prisma.rSVPCard.upsert({

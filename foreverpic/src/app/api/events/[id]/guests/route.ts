@@ -14,8 +14,7 @@ export async function GET(
     const eventId = params.id
     
     const guests = await prisma.guest.findMany({
-      where: { eventId },
-      orderBy: { createdAt: 'desc' }
+      where: { eventId }
     })
     
     // Aggiunta statistiche

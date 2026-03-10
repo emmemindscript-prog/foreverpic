@@ -28,16 +28,12 @@ export async function GET(request: NextRequest) {
     const rsvpStats = await prisma.rSVPCard.groupBy({
       by: ['status'],
       where: { eventId },
-      _count: {
-        status: true
-      },
-      _sum: {
-        plusOnes: true
-      }
+      _count: { status: true },
+      _sum: { plusOnes: true }
     })
 
     // Format stats
-    const stats = {
+    const stats: any = {
       totalGuests,
       totalInvited: 0,
       attending: 0,
@@ -46,7 +42,8 @@ export async function GET(request: NextRequest) {
       noResponse: 0,
       pending: 0,
       totalPlusOnes: 0,
-      totalAttendees: 0
+      totalAttendees: 0,
+      responseRate: 0
     }
 
     rsvpStats.forEach((stat: any) => {
@@ -78,8 +75,8 @@ export async function GET(request: NextRequest) {
 
     // Calculate response rate
     const respondedCount = stats.attending + stats.notAttending + stats.maybe
-    stats.responseRate = totalGuests > 0 
-      ? Math.round((respondedCount / totalGuests) * 100) 
+    stats.responseRate = totalGuests > 0
+      ? Math.round((respondedCount / totalGuests) * 100)
       : 0
 
     // Get recent RSVPs
@@ -87,9 +84,7 @@ export async function GET(request: NextRequest) {
       where: { eventId },
       orderBy: { respondedAt: 'desc' },
       take: 10,
-      include: {
-        guest: true
-      }
+      include: { guest: true }
     })
 
     // Get guests without RSVP (need invitation)
@@ -101,28 +96,22 @@ export async function GET(request: NextRequest) {
       select: {
         id: true,
         name: true,
-        email: true
+        email: true,
+        phone: true
       }
     })
 
     return NextResponse.json({
       stats,
       recentRSVPs,
-      pendingGuests,
-      summary: {
-        invited: stats.totalInvited,
-        responded: respondedCount,
-        attending: stats.totalAttendees,
-        pendingInvites: pendingGuests.length
-      }
+      pendingGuests: pendingGuests.length
     })
+
   } catch (error) {
     console.error('RSVP stats error:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Failed to fetch RSVP statistics' },
       { status: 500 }
     )
-  } finally {
-    await prisma.$disconnect()
   }
 }
