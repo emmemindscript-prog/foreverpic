@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { MessageSquare, Mic, Video, Text, X, Send } from 'lucide-react'
 import { AudioRecorder } from './AudioRecorder'
 import { VideoRecorder } from './VideoRecorder'
+import { MediaPlayer } from './MediaPlayer'
 
 interface Guest {
   id: string
@@ -315,11 +316,17 @@ export function GuestbookManager({ eventId, guestId, guestName, guestEmail }: Gu
                     </div>
                     <div className="mt-1 flex items-center gap-2 text-gray-600">
                       {getMessageIcon(msg.type)}
-                      {msg.type === 'text' ? (
-                        <p className="text-sm">{msg.content}</p>
-                      ) : (
-                        <span className="text-sm text-purple-600">{msg.type} message</span>
-                      )}
+                        {msg.type === 'text' ? (
+                          <p className="text-sm">{msg.content}</p>
+                        ) : (
+                          msg.url ? (
+                            <div className="flex-1">
+                              <MediaPlayer url={msg.url} type={msg.type} />
+                            </div>
+                          ) : (
+                            <span className="text-sm text-purple-600">{msg.type} message</span>
+                          )
+                        )}
                     </div>
                   </div>
                 </div>
