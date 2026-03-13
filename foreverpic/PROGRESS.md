@@ -48,15 +48,17 @@
 - [x] Schema Prisma updated with RSVPCard model
 - [~~] ~~Email invitations~~ (de-scoped per MVP)
 
-### FASE 6: Guestbook (Video/Audio Messages) 🔄
+### FASE 6: Guestbook (Video/Audio Messages) ✅ COMPLETATO (Mar 12)
 - [x] Guestbook API endpoints (`/api/guestbook`)
 - [x] AudioRecorder component with MediaRecorder API
 - [x] VideoRecorder component with camera access
 - [x] GuestbookManager with text/audio/video modes
 - [x] Guestbook public page (`/guestbook/[eventId]`)
-- [ ] Storage integration for audio/video blob upload
-- [ ] Media player for playback in message list
-- [ ] Thumbnail display for video messages
+- [x] Storage integration for audio/video blob upload (Supabase)
+- [x] MediaPlayer component for playback in message list
+- [x] Thumbnail support for video messages
+
+**Commit:** `7190596` - feat: Guestbook MediaPlayer component
 
 ### FASE 7: Deploy
 
